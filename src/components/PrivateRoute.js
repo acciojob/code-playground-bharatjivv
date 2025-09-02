@@ -1,20 +1,14 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-// Accepts 'component' instead of 'children' for v5
-function PrivateRoute({ component: Component, isAuthenticated, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/login" />
-        )
-      }
-    />
-  );
-}
+const PrivateRoute = ({ children, isAuthenticated }) => {
+    // If not authenticated, redirect to login page
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+    
+    // If authenticated, render the protected component
+    return children;
+};
 
 export default PrivateRoute;

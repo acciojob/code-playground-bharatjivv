@@ -1,53 +1,46 @@
-import React, { useState } from 'react';
-import { Switch, Route, Link, Redirect, BrowserRouter } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage.js';
-import Playground from '../pages/Playground.js';
-import PrivateRoute from './PrivateRoute.js';
+import React from "react";
+import './../styles/App.css';
+import CodePlayground from "./CodePlayground";
+import { NavLink, Route, Routes } from "react-router-dom";
+import Login from "./Login";
+import PrivateRoute from "./PrivateRoute";
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+  const handleAuthentication = () => {
+    setIsAuthenticated((prevAuth) => !prevAuth);
+  }
 
   return (
-    <BrowserRouter>
-      <div className="main-container">
-        <nav>
-          <ul>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/playground">PlayGround</Link></li>
-          </ul>
-        </nav>
+    <div className="main-container">
+      <h1>
+        {isAuthenticated ? "Logged in, Now you can enter Playground" : "You are not authenticated, Please login first"}
+      </h1>
 
-        <p data-testid="status-msg">
-          {isAuthenticated
-            ? 'Logged in, Now you can enter Playground'
-            : 'You are not authenticated, Please login first'}
-        </p>
-
-        <Switch>
-          <PrivateRoute
-            path="/playground"
-            isAuthenticated={isAuthenticated}
-            component={Playground}
-          />
-
+      <nav>
+        <ol>
+          <li><NavLink to="/">PlayGround</NavLink></li>
+          <li><NavLink to="/login">Login</NavLink></li>
+        </ol>
+      </nav>
+      
+      <div>
+        <Routes>
+          <Route path="/login" element={<Login handleAuthentication={handleAuthentication} isAuthenticated={isAuthenticated} />} />
           <Route
-            path="/login"
-            render={(props) => (
-              <LoginPage
-                {...props}
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-              />
-            )}
+            path="/"
+            element={
+              <PrivateRoute isAuthenticated={isAuthenticated}>
+                <CodePlayground handleAuthentication={handleAuthentication} isAuthenticated={isAuthenticated} />
+              </PrivateRoute>
+            }
           />
-
-          <Route path="*">
-            <Redirect to="/login" />
-          </Route>
-        </Switch>
+          <Route path="*" element={<p>Page not Found</p>} />
+        </Routes>
       </div>
-    </BrowserRouter>
-  );
+    </div>
+  )
 }
 
-export default App;
+export default App
