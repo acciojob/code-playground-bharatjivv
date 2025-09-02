@@ -27,16 +27,31 @@ const App = () => {
       
       <div>
         <Switch>
-          <Route path="/login" element={<Login handleAuthentication={handleAuthentication} isAuthenticated={isAuthenticated} />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <CodePlayground handleAuthentication={handleAuthentication} isAuthenticated={isAuthenticated} />
-              </PrivateRoute>
-            }
+          {/* In React Router v5, we use 'component' or 'render' prop instead of 'element' */}
+          <Route 
+            path="/login" 
+            render={(props) => (
+              <Login 
+                {...props} 
+                handleAuthentication={handleAuthentication} 
+                isAuthenticated={isAuthenticated} 
+              />
+            )} 
           />
-          <Route path="*" element={<p>Page not Found</p>} />
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <PrivateRoute isAuthenticated={isAuthenticated}>
+                <CodePlayground 
+                  {...props}
+                  handleAuthentication={handleAuthentication} 
+                  isAuthenticated={isAuthenticated} 
+                />
+              </PrivateRoute>
+            )}
+          />
+          <Route path="*" render={() => <p>Page not Found</p>} />
         </Switch>
       </div>
     </div>
