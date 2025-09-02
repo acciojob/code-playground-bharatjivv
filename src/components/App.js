@@ -1,7 +1,7 @@
 import React from "react";
 import './../styles/App.css';
 import CodePlayground from "./CodePlayground";
-import { NavLink, Route, Routes } from "react-router-dom";
+import { NavLink, Route, Switch } from "react-router-dom";
 import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
 
@@ -26,7 +26,7 @@ const App = () => {
       </nav>
       
       <div>
-        <Routes>
+        <Switch>
           <Route path="/login" element={<Login handleAuthentication={handleAuthentication} isAuthenticated={isAuthenticated} />} />
           <Route
             path="/"
@@ -37,7 +37,7 @@ const App = () => {
             }
           />
           <Route path="*" element={<p>Page not Found</p>} />
-        </Routes>
+        </Switch>
       </div>
     </div>
   )
